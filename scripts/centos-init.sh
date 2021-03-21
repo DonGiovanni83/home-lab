@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to setup ansible on centos 8
-# 1. install python 3.8
+# 1. install python 3.7
 # 2. install ansible using pip3
 # 3. create ansible user
 # 4. setup ssh
@@ -22,19 +22,19 @@ yum install -y \
     bzip2-devel \
     libffi-devel
 
-# install python 3.8
-echo "Installing python 3.8"
-wget https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tar.xz
-tar xf Python-3.8.0.tar.xz
-cd Python-3.8.0 || exit 1
+# install python 3.7
+echo "Installing python 3.7"
+wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tar.xz
+tar xf Python-3.7.0.tar.xz
+cd Python-3.7.0 || exit 1
 ./configure --enable-optimizations
 make altinstall
 cd ..
-rm -rf Python-3.8.0*
+rm -rf Python-3.7.0*
 
 echo -e 'export PATH=$PATH:/usr/local/bin' >>/etc/profile
-ln -sf /usr/local/bin/python.3.8 /usr/bin/python
-ln -sf /usr/local/bin/pip3.8 /usr/bin/pip
+ln -sf /usr/local/bin/python.3.7 /usr/bin/python
+ln -sf /usr/local/bin/pip3.7 /usr/bin/pip
 
 # install ansible
 echo "Installing ansible"
@@ -43,7 +43,6 @@ python -m pip install ansible
 # create ansible user
 echo "Creating and setting up ansible user"
 useradd -m ansible
-usermod ansible -aG sudo
 #visudo /etc/sudoers.d/010_ansible_nopasswd
 echo "ansible ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/010_ansible_nopasswd
 

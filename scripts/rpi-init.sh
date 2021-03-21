@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to setup ansible on an raspberry pi
-# 1. install python 3.8
+# 1. install python 3.7
 # 2. install ansible using pip3
 # 3. create ansible user
 # 4. setup ssh
@@ -15,45 +15,13 @@ echo "Installing requirements..."
 
 apt-get update -y
 apt-get dist-ugrade -y
-apt-get install -y \
-    build-essential \
-    tk-dev \
-    libncurses5-dev \
-    libncursesw5-dev \
-    libreadline6-dev \
-    libdb5.3-dev \
-    libgdbm-dev \
-    libsqlite3-dev \
-    libssl-dev \
-    libbz2-dev \
-    libexpat1-dev \
-    liblzma-dev \
-    zlib1g-dev \
-    libffi-dev
 
-# install python 3.8
-echo "Installing python 3.8"
-wget https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tar.xz
-tar xf Python-3.8.0.tar.xz
-cd Python-3.8.0
-./configure --prefix=/usr/local/opt/python-3.8.0
-make -j 4
-make altinstall
-cd ..
-rm -rf Python-3.8.0*
-ln -sf /usr/local/opt/python-3.8.0/bin/python3.8 /usr/bin/python
-ln -sf /usr/local/opt/python-3.8.0/bin/pip3.8 /usr/bin/pip
-
-echo -e 'export PATH=$PATH:/usr/local/opt/python-3.8.0/bin' >>/etc/profile
-
-# install rust
-echo "Installing rust"
-curl https://static.rust-lang.org/rustup/dist/armv7-unknown-linux-gnueabihf/rustup-init --output /tmp/rustup-init
-
-chmod +x /tmp/rustup-init
-/tmp/rustup-init -y
-source /etc/profile
-source /root/.bashrc
+# make python 3.7 default and install pip
+apt install python3-pip python3-apt -y
+echo "Setting up python 3.7 and pip"
+ln -sf /usr/bin/python3.7 /usr/bin/python
+ln -sf /usr/bin/python3.7 /usr/bin/python3
+ln -sf /usr/bin/pip3 /usr/bin/pip
 
 # install ansible
 echo "Installing ansible"
