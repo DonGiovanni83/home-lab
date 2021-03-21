@@ -1,0 +1,12 @@
+---
+
+- name: include os specific vars
+  include_vars: '{{ item  }}'
+  with_first_found:
+      - '{{ ansible_distribution }}.yml'
+      - 'main.yml'
+  
+- name: install base packages
+  import_tasks: packages.yml
+
+

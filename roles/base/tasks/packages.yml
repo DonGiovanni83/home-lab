@@ -1,0 +1,13 @@
+---
+
+- name: install centos base packages
+  yum:
+    name: '{{ base_packages }}'
+    state: installed
+  when: ansible_distribution == 'CentOS'
+
+- name: install raspberry pi base packages
+  apt:
+    name: '{{ base_packages }}'
+    state: present
+  when: ansible_distribution == 'Debian'
