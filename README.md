@@ -5,9 +5,15 @@ pipenv shell --three
 pipenv install
 ```
 
-## files
-This is the Nextcloud Server.
+## Setup secrets
+To create encrypted passwords for the playbook use ansible-vault.
+First add ansible vault password to `vautl_password_file`
+Then create encrypted user passwords:
+```
+ansible-vault encrypt_string 'ANSIBLE_PASSWD' -n ansible_user_pass >> roles/base/vars/user.yml
+ansible-vault encrypt_string 'ROOT_PASSWD' -n root_user_pass >> roles/base/vars/user.yml
 
+```
 ## Node Setup:
 #### Raspberry Pi OS
 1. Flash Raspberry Pi OS to SD Card
