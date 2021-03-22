@@ -1,0 +1,20 @@
+---
+
+- name: ensure raspberry pi user is deleted
+  user:
+    name: pi
+    state: absent
+    remove: yes
+
+- name: set ansible user password
+  user:
+    name: ansible
+    update_password: always
+    password: {{ ansible_user_pass }}
+
+- name: set root user password
+  user:
+    name: root
+    update_password: always
+    password: {{ root_user_pass }}
+
