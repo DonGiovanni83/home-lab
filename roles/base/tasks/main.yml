@@ -7,6 +7,16 @@
       - 'main.yml'
   
 - name: install base packages
+  tags:
+      - packages
   import_tasks: packages.yml
 
+- name: configure users
+  tags:
+      - users
+  include: users.yml
 
+- name: security configurations
+  tags:
+      - security
+  include: security.yml

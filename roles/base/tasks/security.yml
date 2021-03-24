@@ -1,0 +1,36 @@
+---
+
+- name: install ufw
+  apt:
+      package: ufw
+      state: present
+  when: ansible_distribution == 'Debian'
+
+- name: limit ssh login attempts using ufw
+  community.general.ufw:
+      rule: limit
+      port: ssh
+      proto: tcp
+  when: ansible_distribution == 'Debian'
+  notify: enable ufw
+
+- name: install fail2ban
+  yum:
+      name: fail2ban
+      state: present
+  when: ansible_distribution == 'CentOS'
+
+- name: install fail2ban-firewalld when firewalld is active
+  yum:
+      name: fail2ban
+      state: present
+  when: ansible_distribution == 'CentOS'
+
+- name: configure fail2ban
+  copy:
+      src: /etc/fail2ban/jail.conf
+      dest: /etc/fail2ban/jail.local
+      remote_src: yes
+      mode: 0640
+  when: ansible_distribution == 'CentOS'
+  notify: restart fail2ban
