@@ -1,0 +1,19 @@
+---
+
+- hosts: k3s_cluster
+  become: yes
+  roles:
+#    - role: base
+    - role: k3s/base
+  tags:
+    - dev
+
+- hosts: controller
+  become: yes
+  roles:
+    - role: k3s/controller
+
+- hosts: nodes
+  become: yes
+  roles:
+    - role: k3s/node

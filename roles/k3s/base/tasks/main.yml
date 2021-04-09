@@ -1,0 +1,17 @@
+---
+
+- name: Run base configurations
+  import_tasks: common.yml
+
+- name: Run CentOS specific configs
+  import_tasks: centos.yml
+  when: ansible_distribution == 'CentOS'
+
+
+- name: Run Raspberry Pi OS specific configurations
+  import_tasks: raspberry_pi_os.yml
+  when: ansible_distribution == 'Debian'
+
+
+- name: Download k3s
+  import_tasks: download.yml
