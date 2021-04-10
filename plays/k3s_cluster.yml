@@ -5,13 +5,14 @@
   roles:
 #    - role: base
     - role: k3s/base
-  tags:
-    - dev
+
 
 - hosts: controller
   become: yes
   roles:
     - role: k3s/controller
+  tags:
+    - dev
 
 - hosts: nodes
   become: yes
