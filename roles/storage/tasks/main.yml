@@ -10,6 +10,11 @@
   tags:
     - packages
 
+- name: Configure Security
+  import_tasks: security.yml
+  tags:
+    - nfs-security
+
 - name: Setup RockPi SATA Hat
   import_tasks: rockpi_hat.yml
   when: inventory_hostname in groups['storage_nodes']

@@ -14,4 +14,6 @@ k3s_vgroup:
   fs_type: "ext4"
   fs_mount: "/srv/k3s_nfs"
 
+nfs_ports: 13025:13028
 nfs_dir_path: "/srv/k3s_nfs"
+nfs_client_dir_path: "/mnt/k3s_nfs"
