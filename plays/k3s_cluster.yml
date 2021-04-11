@@ -1,14 +1,16 @@
 ---
 
 - hosts: k3s_cluster
+  gather_facts: yes
   become: yes
   roles:
-#    - role: base
+    - role: base
+    - role: storage
     - role: k3s/base
-
 
 - hosts: controller
   become: yes
+  gather_facts: no
   roles:
     - role: k3s/controller
   tags:
@@ -16,5 +18,8 @@
 
 - hosts: nodes
   become: yes
+  gather_facts: no
   roles:
     - role: k3s/node
+  tags:
+    - dev

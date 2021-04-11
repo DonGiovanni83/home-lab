@@ -7,8 +7,6 @@
       - 'main.yml'
 
 - name: install base packages
-  tags:
-      - packages
   import_tasks: packages.yml
 
 - name: configure users
@@ -20,3 +18,9 @@
   tags:
       - security
   include: security.yml
+
+- name: set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+  tags:
+    - hostname

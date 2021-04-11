@@ -2,6 +2,9 @@
 
 - name: include user vars
   include_vars: 'user.yml'
+  tags:
+    - secrets
+
 - name: ensure raspberry pi user is deleted
   user:
     name: pi
@@ -20,3 +23,8 @@
     update_password: always
     password: "{{ root_user_pass | string | password_hash('sha512') }}"
 
+- name: Read secerets
+  debug:
+    msg: "{{ ansible_user_pass }}"
+  tags:
+    - secrets

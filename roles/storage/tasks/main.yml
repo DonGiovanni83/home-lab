@@ -1,0 +1,28 @@
+---
+
+- name: include os specific vars
+  include_vars: '{{ ansible_distribution }}.yml'
+  tags:
+    - packages
+
+- name: Setup dependencies
+  import_tasks: packages.yml
+  tags:
+    - packages
+
+- name: Setup RockPi SATA Hat
+  import_tasks: rockpi_hat.yml
+  when: inventory_hostname in groups['storage_nodes']
+  tags:
+    - rockpi
+
+- name: Configure LVM
+  when: inventory_hostname in groups['storage_nodes']
+  import_tasks: lvm.yml
+  tags:
+    - lvm
+
+- name: Setup NFS
+  import_tasks: nfs.yml
+  tags:
+    - nfs

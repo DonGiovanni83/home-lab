@@ -38,4 +38,28 @@
     path: /etc/sudoers
     validate: 'visudo -cf %s'
   when: ansible_distribution == 'CentOS'
-  
+
+- name: Configure firewalld
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop:
+    - 6443/tcp
+    - 2379-2380/tcp
+    - 10250/tcp
+    - 10251/tcp
+    - 10252/tcp
+    - 10255/tcp
+    - 8472/udp
+  tags:
+    - firewall
+
+
+- name: Enable masquerading on firewalld
+  ansible.posix.firewalld:
+    masquerade: yes
+    state: enabled
+    permanent: yes
+  tags:
+    - firewall

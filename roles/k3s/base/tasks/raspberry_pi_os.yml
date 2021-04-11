@@ -20,3 +20,22 @@
     name: ip6tables
   register: ip6_legacy
   notify: reboot
+
+- name: Configure ufw
+  community.general.ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+  loop:
+    - { port: '6443', proto: 'any'}
+    - { port: '6783', proto: 'tcp'}
+    - { port: '6783', proto: 'udp'}
+    - { port: '6784', proto: 'udp'}
+  tags:
+    - firewall
+#
+#- name: Configure ufw to allow controller traffic
+#  community.general.ufw:
+#    rule: allow
+#    direction: in
+#    src: "{{ item }}"
