@@ -1,0 +1,20 @@
+---
+
+- name: Ensure services on nfs server
+  systemd:
+    name: "{{ item }}"
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  loop:
+    - rpcbind
+    - rpc-statd
+    - nfs-idmapd
+    - nfs-server
+
+- name: Ensure services on nfs client
+  systemd:
+    name: "rpcbind"
+    daemon_reload: yes
+    state: restarted
+    enabled: yes

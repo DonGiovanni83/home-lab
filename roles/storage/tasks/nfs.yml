@@ -26,35 +26,14 @@
     path: /etc/default/nfs-common
     regex: '^STATDOPTS=.*$'
     line: "STATDOPTS=\"--port {{ nfs_common_port }} --outgoing-port {{ nfs_common_outgoing_port }}\""
-
-# TODO export to Handler
-- name: Start NFS services
-  when: inventory_hostname in groups['storage_nodes']
-  systemd:
-    name: "{{ item }}"
-    daemon_reload: yes
-    state: restarted
-    enabled: yes
-  loop:
-    - rpcbind
-    - rpc-statd
-    - nfs-idmapd
-    - nfs-server
+  notify: Ensure services on nfs server
 
 - name: Setup NFS clients mount point
   when: inventory_hostname not in groups['storage_nodes']
   ansible.builtin.file:
     path: "{{ nfs_client_dir_path }}"
     state: directory
-
-# TODO export to Handler
-- name: Start NFS services on clients
-  when: inventory_hostname not in groups['storage_nodes']
-  systemd:
-    name: "rpcbind"
-    daemon_reload: yes
-    state: restarted
-    enabled: yes
+  notify: Ensure services on nfs client
 
 - name: Mount NFS server on clients
   when: inventory_hostname not in groups['storage_nodes']
