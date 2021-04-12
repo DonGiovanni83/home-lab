@@ -13,12 +13,19 @@
     path: /etc/exports
     line: "{{ nfs_dir_path}} *(rw)"
 
-- name: Set static NFS Port
+- name: Set static nfs ports
   when: inventory_hostname in groups['storage_nodes']
   lineinfile:
     path: /etc/default/nfs-kernel-server
-    reges: '^RPCMOUNTDOPTS=.*$'
-    line: "-p {{ nfs_port }}"
+    regex: '^RPCMOUNTDOPTS=.*$'
+    line: "RPCMOUNTDOPTS=\"-p {{ nfs_rpc_mountd_port }}\""
+
+- name: Set static nfs-common port
+  when: inventory_hostname in groups['storage_nodes']
+  lineinfile:
+    path: /etc/default/nfs-common
+    regex: '^STATDOPTS=.*$'
+    line: "STATDOPTS=\"--port {{ nfs_common_port }} --outgoing-port {{ nfs_common_outgoing_port }}\""
 
 # TODO export to Handler
 - name: Start NFS services
@@ -40,6 +47,7 @@
     path: "{{ nfs_client_dir_path }}"
     state: directory
 
+# TODO export to Handler
 - name: Start NFS services on clients
   when: inventory_hostname not in groups['storage_nodes']
   systemd:
@@ -53,6 +61,6 @@
   ansible.posix.mount:
     src: "{{ hostvars[groups['storage_nodes'][0]].ansible_host }}:{{ nfs_dir_path }}"
     path: "{{ nfs_client_dir_path }}"
-    opts: rw,sync,hard,int
+    opts: defaults
     state: mounted
     fstype: nfs
