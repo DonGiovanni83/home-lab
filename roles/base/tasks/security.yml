@@ -12,7 +12,11 @@
       port: ssh
       proto: tcp
   when: ansible_distribution == 'Debian'
-  notify: enable ufw
+
+- name: enable ufw
+  community.general.ufw:
+      state: enabled
+  when: ansible_distribution == 'Debian'
 
 - name: install fail2ban
   yum:

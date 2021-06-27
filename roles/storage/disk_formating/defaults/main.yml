@@ -5,14 +5,18 @@ storage_packages:
   - nfs-common
   - nfs-kernel-server
 
+
 k3s_vgroup:
   vg_name: "vg_k3s"
   vg_pvs:
-    - "/dev/sda"
+    - "/dev/sda1"
   lv_name: "lv_k3s_nfs"
   lv_size: "200G"
   fs_type: "ext4"
   fs_mount: "/srv/k3s_nfs"
+  pvs_ids: [
+    "c043eb15-6c8b-4bcc-bf1e-c69e254274d1"
+  ]
 
 nfs_ports: 13025:13028
 nfs_common_port: 13025

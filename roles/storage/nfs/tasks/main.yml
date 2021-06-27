@@ -1,0 +1,21 @@
+---
+
+- name: include os specific vars
+  include_vars: '{{ ansible_distribution }}.yml'
+  tags:
+    - packages
+
+- name: Setup dependencies
+  import_tasks: packages.yml
+  tags:
+    - packages
+
+- name: Configure Security
+  import_tasks: security.yml
+  tags:
+    - nfs-security
+
+- name: Setup NFS
+  import_tasks: nfs.yml
+  tags:
+    - nfs

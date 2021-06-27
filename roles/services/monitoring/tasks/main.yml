@@ -1,0 +1,85 @@
+---
+- name: Install required packages
+  become: yes
+  import_tasks: packages.yml
+
+- name: Check if cluster-monitoring repo already exists.
+  stat:
+    path: /home/ansible/cluster-monitoring/vars.jsonnet
+  register: vars_file_exists
+
+- name: Retrieve and template cluster-monitoring manifests.
+  block:
+    - name: Clone the cluster-monitoring project.
+      git:
+        repo: https://github.com/carlosedp/cluster-monitoring.git
+        dest: ~/cluster-monitoring
+        version: "{{ cluster_monitoring_version }}"
+        force: yes
+
+    - name: Place our templated vars.jsonnet file.
+      template:
+        src: vars.jsonnet.j2
+        dest: ~/cluster-monitoring/vars.jsonnet
+
+    - name: Run 'vendor' cluster-monitoring target.
+      make:
+        chdir: ~/cluster-monitoring
+        target: vendor
+
+    - name: Run 'make' to generate all the K8s manifests.
+      make:
+        chdir: ~/cluster-monitoring
+
+    - name: Set correct file permissions on manifests.
+      file:
+        dest: ~/clusetr-monitoring/manifests
+        mode: u=rwX,g=rwX,o=rwX
+        recurse: yes
+
+  become: no
+  when: >
+    not vars_file_exists.stat.exists
+    or cluster_monitoring_update_repo | bool
+
+- name: Find all the manifests in the manifests/setup directory.
+  find:
+    paths: /home/ansible/cluster-monitoring/manifests/setup
+    file_type: file
+    patterns: '*.yaml,*.yml'
+  register: cluster_monitoring_setup_files
+
+- name: Slurp those setup files
+  slurp:
+    src: "{{ item }}"
+  register: slurped_setup_files
+  loop: "{{ cluster_monitoring_setup_files.files | sort(attribute='path') | map(attribute='path') | list }}"
+
+- debug:
+    var: "{{ slurped_setup_files }}"
+
+- debug:
+    msg: "{{ item.content }}"
+  with_items:
+    - "{{ slurped_setup_files }}"
+
+- name: Apply cluster-monitoring setup manifests.
+  become: yes
+  community.kubernetes.k8s:
+    definition: "{{  item | json_query(\"content\") | b64decode }}"
+    state: present
+  loop: "{{ slurped_setup_files  }}"
+
+- name: Find all the manifests in the manifests directory.
+  find:
+    paths: /home/ansible/cluster-monitoring/manifests
+    file_type: file
+    patterns: '*.yaml,*.yml'
+  register: cluster_monitoring_files
+
+- name: Apply cluster-monitoring manifests.
+  become: yes
+  community.kubernetes.k8s:
+    definition: "{{ lookup('file', item | urlencode ) | from_yaml }}"
+    state: present
+  loop: "{{ cluster_monitoring_files.files | sort(attribute='path') | map(attribute='path') | list }}"

@@ -1,0 +1,19 @@
+---
+
+- name: Install storage node dependencies
+  apt:
+    package: "{{ storage_packages }}"
+    state: present
+  when: inventory_hostname in groups['storage_nodes']
+
+- name: Install CentOS packages
+  yum:
+    name: '{{ nfs_packages }}'
+    state: installed
+  when: ansible_distribution == 'CentOS'
+
+- name: Install Raspberry Pi packages
+  apt:
+    name: '{{ nfs_packages }}'
+    state: present
+  when: ansible_distribution == 'Debian'

@@ -3,7 +3,7 @@
 - name: Create volume group
   community.general.lvg:
     vg: "{{ k3s_vgroup.vg_name }}"
-    pvs: "{{ k3s_vgroup.vg_pvs | join(,) }}"
+    pvs: "{{ k3s_vgroup.vg_pvs | join(',') }}"
     pv_options: "-Z y"
     state: present
 

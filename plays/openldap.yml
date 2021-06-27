@@ -1,0 +1,6 @@
+---
+
+- hosts: controller
+  become: yes
+  roles:
+    - role : services/openldap

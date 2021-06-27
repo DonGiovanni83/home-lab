@@ -1,0 +1,13 @@
+---
+
+storage_packages:
+  - lvm2
+
+k3s_vg:
+  name: "vg_k3s"
+  lv_name: "lv_nfs"
+  lv_size: "200G"
+  fs_type: "ext4"
+  fs_mount: "/srv/k3s_nfs"
+  pvs_part_uuids:
+    - "ed1a08c4-01"

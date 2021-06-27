@@ -1,0 +1,7 @@
+---
+
+- name: Install storage node dependencies
+  apt:
+    package: "{{ storage_packages }}"
+    state: present
+  when: inventory_hostname in groups['storage_nodes']

@@ -1,9 +1,5 @@
 ---
 
-- name: enable ufw
-  community.general.ufw:
-      state: enabled
-
 - name: restart fail2ban
   service:
       name: fail2ban

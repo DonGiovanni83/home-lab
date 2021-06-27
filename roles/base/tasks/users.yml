@@ -22,9 +22,3 @@
     name: root
     update_password: always
     password: "{{ root_user_pass | string | password_hash('sha512') }}"
-
-- name: Read secerets
-  debug:
-    msg: "{{ ansible_user_pass }}"
-  tags:
-    - secrets

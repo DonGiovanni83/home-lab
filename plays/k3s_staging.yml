@@ -4,8 +4,6 @@
   gather_facts: yes
   become: yes
   roles:
-    - role: base
-    - role: storage
     - role: k3s/base
 
 - hosts: controller

@@ -1,0 +1,12 @@
+---
+
+- name: Upload RockPi SATA Hat installer
+  copy:
+    src: install_sata_hat.sh
+    dest: /root/install_sata_hat.sh
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Run RockPi SATA Hat installer
+  shell: /root/install_sata_hat.sh

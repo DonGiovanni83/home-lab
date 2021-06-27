@@ -1,0 +1,37 @@
+---
+
+- name: Create volume group
+  community.general.lvg:
+    vg: "{{ k3s_vg.name }}"
+    pvs: "/dev/disk/by-partuuid/{{ item }}"
+    pv_options: "-Z y"
+    state: present
+  loop: "{{ k3s_vg.pvs_part_uuids }}"
+
+- name: Create logical volume
+  community.general.lvol:
+    vg: "{{ k3s_vg.name }}"
+    lv: "{{ k3s_vg.lv_name }}"
+    size: "{{ k3s_vg.lv_size }}"
+    resizefs: yes
+    active: yes
+    state: present
+
+- name: Create {{ k3s_vg.fs_type}} filesystem for /dev/{{ k3s_vg.name }}/{{ k3s_vg.lv_name }}
+  community.general.filesystem:
+    fstype: "{{ k3s_vg.fs_type }}"
+    dev: "/dev/{{ k3s_vg.name }}/{{ k3s_vg.lv_name }}"
+
+- name: create directory to mount the filesystem
+  file:
+    path: "{{ k3s_vg.fs_mount }}"
+    state: directory
+    mode: 0755
+
+- name: mount the filesystem
+  ansible.posix.mount:
+    path: "{{ k3s_vg.fs_mount }}"
+    src: "/dev/mapper/{{ k3s_vg.name }}-{{ k3s_vg.lv_name }}"
+    fstype: "{{ k3s_vg.fs_type }}"
+    opts: defaults
+    state: mounted

@@ -1,0 +1,16 @@
+---
+
+- name: include os specific vars
+  include_vars: '{{ ansible_distribution }}.yml'
+
+- name: Install storage node dependencies
+  apt:
+    package: "{{ storage_packages }}"
+    state: present
+  when: inventory_hostname in groups['storage_nodes']
+
+- name: Configure LVM
+  when: inventory_hostname in groups['storage_nodes']
+  import_tasks: lvm.yml
+  tags:
+    - lvm

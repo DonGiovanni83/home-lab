@@ -1,0 +1,17 @@
+---
+
+- name: Create openldap namespace
+  k8s:
+    name: {{ namespace }}
+    api_version: v1
+    kind: Namespace
+    state: present
+
+- name: Apply openldap manifests
+  k8s:
+    definition: {{ lookup('template', 'templates/' + item ) }}
+    state: present
+  loop:
+    - deployment.yml
+    - persistent_volume.yml
+    - service.yml

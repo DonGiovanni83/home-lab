@@ -1,0 +1,3 @@
+---
+- config_path : /srv/services/openldap
+- namespace: openldap

@@ -27,10 +27,14 @@
     port: "{{ item.port }}"
     proto: "{{ item.proto }}"
   loop:
-    - { port: '6443', proto: 'any'}
+    - { port: '6443', proto: 'tcp'}
     - { port: '6783', proto: 'tcp'}
     - { port: '6783', proto: 'udp'}
     - { port: '6784', proto: 'udp'}
+    - { port: '80', proto: 'tcp'}
+    - { port: '443', proto: 'tcp'}
+    - { port: '8472', proto: 'udp'}
+    - { port: '10250', proto: 'tcp'}
   tags:
     - firewall
 #

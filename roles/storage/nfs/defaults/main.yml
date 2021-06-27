@@ -1,0 +1,13 @@
+---
+
+storage_packages:
+  - nfs-common
+  - nfs-kernel-server
+
+nfs_ports: 13025:13028
+nfs_common_port: 13025
+nfs_common_outgoing_port: 13026
+nfs_rpc_mountd_port: 13027
+
+nfs_dir_path: "/srv/k3s_nfs"
+nfs_client_dir_path: "/mnt/k3s_nfs"

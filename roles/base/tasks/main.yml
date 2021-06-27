@@ -22,5 +22,15 @@
 - name: set hostname
   hostname:
     name: "{{ inventory_hostname }}"
+    use: "systemd"
   tags:
     - hostname
+
+- name: update hostname in /etc/hosts
+  ansible.builtin.replace:
+    path: /etc/hosts
+    regexp: '^(.*)raspberrypi$'
+    replace: '\1{{inventory_hostname}}'
+  tags:
+    - hostname
+
